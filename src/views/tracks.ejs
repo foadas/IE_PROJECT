@@ -39,6 +39,13 @@
 </select>
 <input type="text" id="searchInput" placeholder="Search">
 <button onclick="searchTable()">Search</button>
+<br>
+<div id="saveContainer" style="display: none">
+<input type="text" id="saveInput" placeholder="save as:">
+<button onclick="saveCsv()">Save</button>
+</div>
+<br>
+<span id = "error"></span>
 <table id="tracksTable">
     <thead>
     <tr>
@@ -72,12 +79,15 @@
 async function searchTable() {
 const searchInput = document.getElementById('searchInput').value;
 const columnSelector = document.getElementById('columnSelector').value;
+  const errorTextArea = document.getElementById('error');
+  const saveContainer = document.getElementById('saveContainer');
   const data = {
     type: columnSelector,
     search: searchInput,
   };
-  console.log(data)
-
+  if(searchInput===''){
+    location.reload();
+  }
   try {
     const response = await fetch('/tracks', {
       method: 'POST',
@@ -88,12 +98,18 @@ const columnSelector = document.getElementById('columnSelector').value;
     });
 
     if (!response.ok) {
-      throw new Error('Search request failed');
+      response.json().then(err=>{
+        errorTextArea.textContent = err.message
+      })
+    } else {
+      saveContainer.style.display = '';
+      errorTextArea.textContent = '';
     }
 
     const result = await response.json();
     updateTable(result);
   } catch (error) {
+    errorTextArea.textContent = `Error: ${error.message}`;
     console.error('Error during search:', error);
   }
 }
@@ -118,6 +134,39 @@ function updateTable(tracks) {
     newRow.insertCell(7).textContent = track.playlist_name;
   });
   tableBody.appendChild(fragment);
+}
+
+async function saveCsv(){
+  const searchInput = document.getElementById('searchInput').value;
+  const columnSelector = document.getElementById('columnSelector').value;
+  const saveInput = document.getElementById('saveInput').value;
+  const errorTextArea = document.getElementById('error');
+  const data = {
+    type: columnSelector,
+    search: searchInput,
+    fileName: saveInput
+  };
+  try {
+    const response = await fetch('/tracks/save', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+       response.json().then(err=>{
+        errorTextArea.textContent = err.message
+      })
+    } else {
+      location.reload();
+      errorTextArea.textContent = 'successful';
+    }
+  } catch (error) {
+    errorTextArea.textContent = `Error: ${error.message}`;
+    console.error('Error during save:', error);
+  }
 }
 </script>
 </body>

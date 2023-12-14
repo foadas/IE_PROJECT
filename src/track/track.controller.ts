@@ -14,4 +14,8 @@ export class TrackController {
   async FilterTracks(@Body() data: { type: string; search: string }) {
     return await this.trackService.FilterTracks(data.type, data.search);
   }
+  @Post('save')
+  async SaveCsv(@Body() data: { type: string; search: string; fileName:string }) {
+    return await this.trackService.SaveCsv(data.type, data.search,data.fileName);
+  }
 }
