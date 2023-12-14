@@ -1,5 +1,5 @@
-import { Controller, Get, Render } from '@nestjs/common';
-import { TrackService } from './track.service';
+import { Body, Controller, Get, Post, Render } from "@nestjs/common";
+import { TrackService } from "./track.service";
 
 @Controller('tracks')
 export class TrackController {
@@ -9,5 +9,9 @@ export class TrackController {
   async getTracks() {
     const tracks = await this.trackService.getTracks();
     return { tracks };
+  }
+  @Post()
+  async FilterTracks(@Body() data: { type: string; search: string }) {
+    return await this.trackService.FilterTracks(data.type, data.search);
   }
 }

@@ -6,13 +6,119 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tracks</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
 <h1>Tracks</h1>
-<ul>
+<select id="columnSelector">
+    <option value="trackId">trackId</option>
+    <option value="names">Names</option>
+    <option value="artist_names"> Artist names</option>
+    <option value="artist_pop"> Artist pop</option>
+    <option value="albums"> Albums</option>
+    <option value="track_pop"> Track pop</option>
+    <option value="durations_ms"> Duration</option>
+    <option value="playlist_name"> Playlist name</option>
+
+
+</select>
+<input type="text" id="searchInput" placeholder="Search">
+<button onclick="searchTable()">Search</button>
+<table id="tracksTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Names</th>
+        <th>Artist names</th>
+        <th>Artist pop</th>
+        <th>Albums</th>
+        <th>Track pop</th>
+        <th>Duration</th>
+        <th>Playlist</th>
+    </tr>
+    </thead>
+    <tbody>
     <% tracks.forEach(track => { %>
-        <li><%= track.names %></li>
+        <tr>
+            <td><%= track.trackId %></td>
+            <td><%= track.names %></td>
+            <td><%= track.artist_names %></td>
+            <td><%= track.artist_pop %></td>
+            <td><%= track.albums %></td>
+            <td><%= track.track_pop %></td>
+            <td><%= track.durations_ms%></td>
+            <td><%= track.playlist_name %></td>
+        </tr>
     <% }); %>
-</ul>
+    </tbody>
+</table>
+<script>
+
+async function searchTable() {
+const searchInput = document.getElementById('searchInput').value;
+const columnSelector = document.getElementById('columnSelector').value;
+  const data = {
+    type: columnSelector,
+    search: searchInput,
+  };
+  console.log(data)
+
+  try {
+    const response = await fetch('/tracks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Search request failed');
+    }
+
+    const result = await response.json();
+    updateTable(result);
+  } catch (error) {
+    console.error('Error during search:', error);
+  }
+}
+function updateTable(tracks) {
+  const tableBody = document.querySelector('#tracksTable tbody');
+  const fragment = document.createDocumentFragment();
+
+  while (tableBody.firstChild) {
+    tableBody.removeChild(tableBody.firstChild);
+  }
+
+  tracks.forEach(track => {
+    const newRow = fragment.appendChild(tableBody.insertRow());
+
+    newRow.insertCell(0).textContent = track.trackId;
+    newRow.insertCell(1).textContent = track.names;
+    newRow.insertCell(2).textContent = track.artist_names;
+    newRow.insertCell(3).textContent = track.artist_pop;
+    newRow.insertCell(4).textContent = track.albums;
+    newRow.insertCell(5).textContent = track.track_pop;
+    newRow.insertCell(6).textContent = track.durations_ms;
+    newRow.insertCell(7).textContent = track.playlist_name;
+  });
+  tableBody.appendChild(fragment);
+}
+</script>
 </body>
 </html>
