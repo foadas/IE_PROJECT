@@ -2,6 +2,7 @@
 <h2> an app to read csv data,search in data visually, and store the searched data as csv </h2>
   <h3> backend + server side rendering view </h3>
 <h4> work flow: </h4>
+
 <span style="color: red;">&bull;</span> Create your `development.env`
 
 <span style="color: red;">&bull;</span> Start the database: `sudo docker-compose --env-file development.env up -d dev-db`
