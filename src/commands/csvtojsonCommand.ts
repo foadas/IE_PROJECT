@@ -15,15 +15,13 @@ export class CsvtojsonCommand extends CommandRunner {
     passedParams: string[],
     options?: Record<string, any>,
   ): Promise<void> {
-    this.getDataFromCsv();
+    await this.getDataFromCsv(passedParams[0]);
   }
 
-  private async getDataFromCsv() {
-    const csvData = await csv().fromFile('src/csvDir/tracks.csv');
+  private async getDataFromCsv(fileName) {
+    const csvData = await csv().fromFile(`src/csvDir/${fileName}.csv`);
     await this.addToDb(csvData);
   }
-
-
   private async addToDb(csv) {
     for (const item of csv) {
       const track = await this.tracksRepo.findOne({
@@ -37,6 +35,7 @@ export class CsvtojsonCommand extends CommandRunner {
           names: item.names,
           artist_names: item.artist_names,
           albums: item.albums,
+          artist_pop: item.artist_pop,
           track_pop: item.track_pop,
           durations_ms: item.durations_ms,
           playlist_name: item.playlist_name,

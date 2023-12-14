@@ -13,12 +13,12 @@ export class Tracks {
   @Column()
   artist_names: string;
 
-  @Column()
-  artist_pop: number;
+  @Column({ nullable: true })
+  artist_pop: string;
 
   @Column()
   albums: string;
-  @Column()
+  @Column({ nullable: true })
   track_pop: string;
   @Column()
   durations_ms: string;

@@ -6,7 +6,9 @@ import * as process from 'process';
 import { config } from "dotenv";
 config();
 
+
 async function bootstrap() {
+  console.log('poooooort',process.env.PORT);
   const app = await NestFactory.create(AppModule);
   await app.listen(process.env.PORT);
 }
