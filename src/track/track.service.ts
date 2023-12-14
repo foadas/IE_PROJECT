@@ -31,6 +31,12 @@ export class TrackService {
     await this.writeToCsv(data, fileName);
   }
   async writeToCsv(data: any[], fileName: string): Promise<void> {
+    if (fileName === '') {
+      throw new HttpException(
+        `file name cannot be empty`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const filePath = `src/csvDir/${fileName}.csv`;
     if (fs.existsSync(filePath)) {
       throw new HttpException(
