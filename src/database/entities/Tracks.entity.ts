@@ -5,6 +5,8 @@ export class Tracks {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ unique: true })
+  trackId: number;
   @Column()
   names: string;
 
@@ -16,4 +18,10 @@ export class Tracks {
 
   @Column()
   albums: string;
+  @Column()
+  track_pop: string;
+  @Column()
+  durations_ms: string;
+  @Column()
+  playlist_name: string;
 }

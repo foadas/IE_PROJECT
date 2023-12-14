@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 config({ path: `${process.env.ENV}.env` });
 
 export const stageDbConfig = {
-  type: 'mysql',
+  type: 'postgres',
   host: process.env.STAGE_DB_HOST,
   port: process.env.STAGE_DB_PORT,
   username: process.env.STAGE_DB_USERNAME,
