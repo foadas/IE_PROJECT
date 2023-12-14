@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { developmentDbConfig } from './developmentDatasource.config';
-import { stageDbConfig } from './stageDatasource.config';
-import { testDbConfig } from './testDatasource.config';
+import { stageDbConfig } from './stageDataSource.config';
+import { testDbConfig } from './testDataSource.config';
 
 const databaseConfigurations = {
   development: developmentDbConfig,
